@@ -56,7 +56,7 @@ ROOT_URLCONF = 'deploy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['D:/Code/Thesis/django/deploy/templates',"E:/Code/Thesis/django/deploy/templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templatess'),os.path.join(BASE_DIR, 'templates')],#'D:/Code/django_thesis/',"D:/Code/django_thesis/templates",
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

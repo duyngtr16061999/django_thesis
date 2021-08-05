@@ -2,20 +2,6 @@ from django.apps import AppConfig
 
 import html
 
-from transformers import *
-from transformers import (
-    MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING,
-    WEIGHTS_NAME,
-    AdamW,
-    AutoConfig,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    get_linear_schedule_with_warmup,
-    glue_compute_metrics as compute_metrics,
-    glue_convert_examples_to_features as convert_examples_to_features,
-    glue_output_modes as output_modes,
-    glue_processors as processors,
-)
 
 import torch
 from torch.nn import functional as F
@@ -24,15 +10,6 @@ import torchvision.models as vmodels
 
 from transformers import *
 from transformers import (
-    MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING,
-    WEIGHTS_NAME,
-    AdamW,
-    AutoConfig,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    get_linear_schedule_with_warmup,
-    glue_compute_metrics as compute_metrics,
-    glue_convert_examples_to_features as convert_examples_to_features,
     glue_output_modes as output_modes,
     glue_processors as processors,
 )
@@ -115,7 +92,7 @@ class VisnLangModel(nn.Module):
         labels=None,
         output_attentions=None,
         output_hidden_states=None,
-        return_dict=None
+        return_dict=False
     ):
         if not self.finetuning:
             with torch.no_grad():
@@ -128,7 +105,7 @@ class VisnLangModel(nn.Module):
                     inputs_embeds=inputs_embeds,
                     output_attentions=output_attentions,
                     output_hidden_states=output_hidden_states,
-                    return_dict=return_dict
+                    return_dict=False
                 )
         else:
             bert_output = self.backbone(
@@ -140,7 +117,7 @@ class VisnLangModel(nn.Module):
                 inputs_embeds=inputs_embeds,
                 output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
-                return_dict=return_dict
+                return_dict=False
             )
 
         # sequence_output, pooled_output, (hidden_states), (attentions) --> seq_output
@@ -189,7 +166,7 @@ class BertConfig(AppConfig):
 
     layers_lang = "4,3,2,1"
     layers_lang = list(map(lambda x: -int(x), layers_lang.split(',')))
-    model_name_or_path = "bert-base-uncased"
+    model_name_or_path = "./bert-base-uncased"
 
     config = AutoConfig.from_pretrained(
             model_name_or_path,
@@ -204,10 +181,10 @@ class BertConfig(AppConfig):
     )
 
     model = BertForSequenceClassification(config)
-    vlmodel = VisnLangModel(64, "bert", model_name_or_path, layers_lang)
+    vlmodel = VisnLangModel(78, "bert", model_name_or_path, layers_lang)
 
     model.bert = vlmodel
-    model.classifier = nn.Linear(768+64, num_labels, bias=True)
+    model.classifier = nn.Linear(768+78, num_labels, bias=True)
     model.load_state_dict(torch.load(old_name + "/visnlang.pt", map_location=torch.device('cpu')))
     model.eval()
 
@@ -246,10 +223,10 @@ class BertConfig(AppConfig):
     )
 
     model_MNLI = BertForSequenceClassification(config)
-    vlmodel_MNLI = VisnLangModel(64, "bert", model_name_or_path, layers_lang)
+    vlmodel_MNLI = VisnLangModel(78, "bert", model_name_or_path, layers_lang)
 
     model_MNLI.bert = vlmodel
-    model_MNLI.classifier = nn.Linear(768+64, num_labels, bias=True)
+    model_MNLI.classifier = nn.Linear(768+78, num_labels, bias=True)
     #model_MNLI.load_state_dict(torch.load(old_name + "/visnlang.pt", map_location=torch.device('cpu')))
     model_MNLI.eval()
 

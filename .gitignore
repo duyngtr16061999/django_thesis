@@ -1,2 +1,4 @@
 MNLI/visnlang.pt
 CoLA/visnlang.pt
+bert-base-uncased/*
+myenv/*
