@@ -72,9 +72,9 @@ class VisnLangModel(nn.Module):
         self.backbone = bert
         self.layers = sorted(layers)
 
-        print(f"Language Model: {arch} with weight {weight}; Fine-tuning: {finetuning}, Pre-trained: {pretrained}.")
-        print(f"Language Model: using layers {self.layers}, result in backbone dim {backbone_dim * len(self.layers)} "
-              f"--> output dim {dim}.")
+        #print(f"Language Model: {arch} with weight {weight}; Fine-tuning: {finetuning}, Pre-trained: {pretrained}.")
+        #print(f"Language Model: using layers {self.layers}, result in backbone dim {backbone_dim * len(self.layers)} "
+              #f"--> output dim {dim}.")
 
         # Setup follow-up layers
         self.mlp = nn.Sequential(
